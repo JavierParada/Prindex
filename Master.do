@@ -1,9 +1,10 @@
 /*==============================================================================
 
 						MAKING ANALYTICS REUSABLE
-							Washington, DC
-							 March 1, 2019
-							 
+						Javier Parada Gomez Urquiza
+							From Luisa
+							  September 23, 2020
+							
 					STATA MARKDOWN MASTER DO FILE
 							 
 ==============================================================================*/
@@ -60,8 +61,8 @@
 		//cd "${mdfolder}"
 		//copy https://www.stata-journal.com/production/sjlatex/stata.sty 	stata.sty
 		
-		markstat using "PrindexAnalysis", 
-		*bundle using simpleScript
+		markstat using "PrindexAnalysis", docx
+		*bundle using PrindexAnalysis
 	
 	}
 	

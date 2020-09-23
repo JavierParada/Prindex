@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/javierparada/Documents/Github/Prindex/PrindexAnalysis.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}23 Sep 2020, 15:02:19
+ {txt}opened on:  {res}23 Sep 2020, 19:48:51
 {txt}
 {com}. //_1
 . display c(current_date)
@@ -18,21 +18,129 @@
 {txt}
 {com}. quietly cd "/Users/javierparada/Documents/Github/Prindex/"
 {txt}
-{com}. quietly import delimited "country-data/Afghanistan_download_R1_230620.csv", clear 
+{com}. use "appended.dta", clear
 {txt}
-{com}. //_3q
-. sum mainprop_security if mainprop_security<2
-
-{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
-{hline 13}{c +}{hline 57}
-mainprop_s~y {c |}{res}      1,020    .7411765    .4382033          0          1
+{com}. qui unique country
+{txt}
+{com}. local number_countries `r(unique)'
+{txt}
+{com}. 
+. //_3
+. display `number_countries'
+{res}137
+{txt}
+{com}. //_4q
+. 
+. /* STEP 1: CONVERT SHAPEFILE TO STATA FORMAT */
+. cap shp2dta using "ne_110m_admin_0_countries/ne_110m_admin_0_countries", data(worlddata) coor(worldcoor) genid(id)
+{txt}
+{com}. 
+. /* STEP 2: CREATE YOUR TRAVEL DATA */
+. use worlddata, clear
+{txt}
+{com}. qui merge 1:1 NAME using "/Users/javierparada/Documents/Github/Prindex/coverage.dta"
+{txt}
+{com}. *tab NAME _merge if _merge<3
+. qui drop if _merge==2
+{txt}
+{com}. qui replace visited=2 if visited==.
+{txt}
+{com}.     
+. label define foreignl 1 "Covered" 2 "Not Covered" 
+{txt}
+{com}. label values visited foreignl  
+{txt}
+{com}.     
+. /* STEP 3: DRAW YOUR MAP */
+. spmap visited using worldcoor.dta if NAME!="Antarctica", id(id) fcolor(Blues) ///
+> title("Prindex Coverage") ///
+> note(" ""Generated using Stata Software.", size(*0.75)) legorder(lohi) ///
+> legend(label(2 "Covered")) legend(label(1 " Not Covered")) 
+{res}{txt}
+{com}.     
+. /* STEP 4: EXPORT MAP */
+. qui graph export "maps/map1.png", width(1000) replace
+{txt}
+{com}. //_5q
+. use "appended.dta", clear
+{txt}
+{com}. /*==================================================
+>           4: Study reasons of tenure insecurity
+> ==================================================*/
+. forval i = 1/7 {c -(}
+{txt}  2{com}.     qui gen rs_`i'=.
+{txt}  3{com}.     qui replace rs_`i'=1 if reason_`i'==1 & mainprop_security==0
+{txt}  4{com}.     qui replace rs_`i'=0 if reason_`i'==2 & mainprop_security==0
+{txt}  5{com}.     qui replace rs_`i'=0 if reason_`i'==3 & mainprop_security==0
+{txt}  6{com}.     qui replace rs_`i'=. if reason_`i'==4 & mainprop_security==0
+{txt}  7{com}. {c )-}
+{txt}
+{com}. 
+. *----------4.1: Label rs variables
+.     
+. label var rs_1 "The owner may ask you to leave"
+{txt}
+{com}. label var rs_2 "The person paying rent may ask you to leave"
+{txt}
+{com}. label var rs_3 "Disagreements with family or relatives"
+{txt}
+{com}. label var rs_4 "Death of a household member"
+{txt}
+{com}. label var rs_5 "Companies may seize this property"
+{txt}
+{com}. label var rs_6 "Lack or money or other resources needed to live"
+{txt}
+{com}. label var rs_7 "Government may seize this property"
+{txt}
+{com}. *label var rs_8 "Issues with customary authorities"
+.     
+. 
+. *---------- TABLE 2
+. * tabstat rs_* [aw=prindex_wt], by(NAME_0)  labelwidth(20) format(%9.4g) save    
+. * same as
+. collapse (mean) rs_* [aw=prindex_wt],  by(NAME_0) 
+{txt}
+{com}. format rs_* %9.4g
+{txt}
+{com}. gen NAME=NAME_0
+{txt}
+{com}. qui save "tables/table1.dta", replace
+{txt}
+{com}. qui export delimited using "tables/table1.csv", replace
+{txt}
+{com}. qui reshape long rs_, i(NAME_0) j(motive)
+{txt}
+{com}. *tab NAME_0 motive, sum(rs_) 
+. 
+. //_6q
+. local title_1 "rs_1 The owner may ask you to leave"
+{txt}
+{com}. local title_2 "rs_2 The person paying rent may ask you to leave"
+{txt}
+{com}. local title_3 "rs_3 Disagreements with family or relatives"
+{txt}
+{com}. local title_4 "rs_4 Death of a household member"
+{txt}
+{com}. local title_5 "rs_5 Companies may seize this property"
+{txt}
+{com}. local title_6 "rs_6 Lack or money or other resources needed to live"
+{txt}
+{com}. local title_7 "rs_7 Government may seize this property"
+{txt}
+{com}.     
+. /* STEP 2: CREATE YOUR TRAVEL DATA */
+. use worlddata, clear
+{txt}
+{com}. qui merge 1:1 NAME using "tables/table1.dta"
+{txt}
+{com}. qui{c -(}
 {txt}
 {com}. //_^
 . log close
       {txt}name:  {res}<unnamed>
        {txt}log:  {res}/Users/javierparada/Documents/Github/Prindex/PrindexAnalysis.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res}23 Sep 2020, 15:02:19
+ {txt}closed on:  {res}23 Sep 2020, 19:49:05
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}
