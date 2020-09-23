@@ -1,0 +1,38 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/javierparada/Documents/Github/Prindex/PrindexAnalysis.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}23 Sep 2020, 15:02:19
+{txt}
+{com}. //_1
+. display c(current_date)
+{res}23 Sep 2020
+{txt}
+{com}. //_2q
+. drop _all
+{txt}
+{com}. clear all
+{res}{txt}
+{com}. set more off
+{txt}
+{com}. quietly cd "/Users/javierparada/Documents/Github/Prindex/"
+{txt}
+{com}. quietly import delimited "country-data/Afghanistan_download_R1_230620.csv", clear 
+{txt}
+{com}. //_3q
+. sum mainprop_security if mainprop_security<2
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+mainprop_s~y {c |}{res}      1,020    .7411765    .4382033          0          1
+{txt}
+{com}. //_^
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/javierparada/Documents/Github/Prindex/PrindexAnalysis.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}23 Sep 2020, 15:02:19
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

@@ -1,0 +1,43 @@
+% Analysis of Prindex 2020 data
+% Javier Parada
+% `s c(current_date)`
+
+Introduction
+--------------------------------------------------------
+
+```s/
+	drop _all
+	clear all
+	set more off
+	quietly cd "/Users/javierparada/Documents/Github/Prindex/"
+	quietly import delimited "country-data/Afghanistan_download_R1_230620.csv", clear 
+```
+
+Data for Afganistan
+
+```s/
+	sum mainprop_security if mainprop_security<2
+```
+
+Let us read the fuel efficiency data that is shipped with Stata
+
+    sysuse auto, clear
+
+To study how fuel efficiency depends on weight it is useful to
+transform the dependent variable from "miles per gallon" to
+"gallons per 100 miles"
+
+    gen gphm = 100/mpg
+
+We then obtain a more linear relationship
+
+    twoway scatter gphm weight || lfit gphm weight ///
+        , ytitle(Gallons per Mile) legend(off)
+    graph export auto.png, width(500) replace
+
+![Fuel Efficiency](auto.png)
+
+That's all for now!
+
+
+
