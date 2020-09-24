@@ -13,8 +13,8 @@
 	PART 0: Select sections to run
 *******************************************************************************/
 
-	local packages		0
-	local paths			0
+	local packages		1
+	local paths			1
 	local document		1
 
 /*******************************************************************************

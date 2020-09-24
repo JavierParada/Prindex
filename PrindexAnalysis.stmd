@@ -1,5 +1,5 @@
 % Analysis of Prindex 2020 data
-% Javier Parada Gomez Urquiza
+% Javier Parada Gómez Urquiza
 % `s c(current_date)`
 
 Introduction
@@ -16,7 +16,7 @@ Introduction
 
 ```
 
-Prindex data is collected in `s `number_countries'` countries through interviews with randomly selected individuals over the age of 18. Some of the countries where Prindex **has not** been collected are Angola, DRC, CAR, Sudan, South Sudan, Syria, Oman, North Korea, and Papua New Guinea as shown in Map 1.  More information on coverage is available at [Prindex.net](https://prindex.net).
+Prindex data is collected in `s `number_countries'` countries through interviews with randomly selected individuals over the age of 18. Some of the countries where Prindex **has not** been collected are Angola, Democratic Republic of Congo, Central African Republic, Sudan, South Sudan, Syria, Oman, North Korea, and Papua New Guinea as shown in Map 1.  More information on coverage is available at [Prindex.net](https://prindex.net).
 
 ```s/
 
@@ -37,7 +37,7 @@ Prindex data is collected in `s `number_countries'` countries through interviews
 	spmap visited using worldcoor.dta if NAME!="Antarctica", id(id) fcolor(Blues) ///
 	title("Prindex Coverage") ///
 	note(" ""Generated using Stata Software.", size(*0.75)) legorder(lohi) ///
-	legend(label(2 "Covered")) legend(label(1 " Not Covered")) 
+	legend(label(2 "Covered")) legend(label(3 "Not Covered")) 
 	
 	/* STEP 4: EXPORT MAP */
 	qui graph export "maps/map1.png", width(1000) replace
@@ -47,9 +47,9 @@ Prindex data is collected in `s `number_countries'` countries through interviews
 Reasons for Tenure Insecurity
 --------------------------------------------------------
 
-The questionnaire provides reasons for which the individual feels tenure insecure. In particular, it asks the following question:
+Prindex provides reasons for which individuals feel tenure insecure. In particular, the survey asks the following question:
 
-Please tell me whether each of the following is a reason why you previously said it is likely you could lose the right to use some or all of (If code 1 in PR0B/WP20655, insert {this home} / If code 2 in PR0B/WP20655, insert {this property}) against your will in the next 5 years. 
+Please tell me whether each of the following is a reason why you previously said it is likely you could lose the right to use some or all of this home or property against your will in the next 5 years:
 
 rs_1. The owner may ask you to leave **YES/NO/Don't Know/Refuse**
 
@@ -66,6 +66,8 @@ rs_6. Lack of money or other resources needed to live on this property **YES/NO/
 rs_7. Government may seize **YES/NO/Don't Know/Refuse**
 
 rs_8. Issues with customary authorities **YES/NO/Don't Know/Refuse**
+
+The answers to Reason 7 are missing for some countries. The answers to Reason 8 are missing for all countries. Some individuals provided a reason for tenure insecurity even though they previously declared in the questionnaire that they were tenure secure. For that reason, we have only focused on the reasons for tenure insecurity of the tenure insecure. A better description of our procedure is provided in the following code: 
 
 
 
@@ -123,24 +125,30 @@ rs_8. Issues with customary authorities **YES/NO/Don't Know/Refuse**
 	qui merge 1:1 NAME using "tables/table1.dta"
 	qui{
 	forval i = 1/7 {
-	/* STEP 3: DRAW YOUR MAP */
-	spmap rs_`i' using worldcoor.dta if NAME!="Antarctica", id(id) fcolor(Greens) ///
-	title(`title_`i'') ///
-	note("Generated using Stata Software.", size(*0.75)) legorder(lohi) 
-	
-	/* STEP 4: EXPORT MAP */
-	qui graph export "maps/map_rs_`i'.png", width(1000) replace
+		/* STEP 3: DRAW YOUR MAP */
+		spmap rs_`i' using worldcoor.dta if NAME!="Antarctica", id(id) fcolor(BuYlRd) ///
+		title(`title_`i'') ndfcolor(gs15)  clmethod(custom) clbreaks(0 .1 .20 .3 .40 .5 .60 .7 .80 .9 1) ///
+		note("Generated using Stata Software.", size(*0.75)) legorder(hilo)  legtitle("Percentage Answer=Yes")
+		
+		/* STEP 4: EXPORT MAP */
+		qui graph export "maps/map_rs_`i'.png", width(1000) replace
 	}
 	}
 ```
 
-![Map: Reason 1](maps/map_rs_1.png)
-![Map: Reason 2](maps/map_rs_2.png)
-![Map: Reason 3](maps/map_rs_3.png)
-![Map: Reason 4](maps/map_rs_4.png)
-![Map: Reason 5](maps/map_rs_5.png)
-![Map: Reason 6](maps/map_rs_6.png)
-![Map: Reason 7](maps/map_rs_7.png)
+![Map 2.1: Reason 1](maps/map_rs_1.png)
+
+![Map 2.2: Reason 2](maps/map_rs_2.png)
+
+![Map 2.3: Reason 3](maps/map_rs_3.png)
+
+![Map 2.4: Reason 4](maps/map_rs_4.png)
+
+![Map 2.5: Reason 5](maps/map_rs_5.png)
+
+![Map 2.6: Reason 6](maps/map_rs_6.png)
+
+![Map 2.7: Reason 7](maps/map_rs_7.png)
 
 Appendix
 --------------------------------------------------------

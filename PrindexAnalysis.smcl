@@ -3,11 +3,11 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/javierparada/Documents/Github/Prindex/PrindexAnalysis.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}23 Sep 2020, 19:48:51
+ {txt}opened on:  {res}24 Sep 2020, 17:05:08
 {txt}
 {com}. //_1
 . display c(current_date)
-{res}23 Sep 2020
+{res}24 Sep 2020
 {txt}
 {com}. //_2q
 . drop _all
@@ -55,7 +55,7 @@
 . spmap visited using worldcoor.dta if NAME!="Antarctica", id(id) fcolor(Blues) ///
 > title("Prindex Coverage") ///
 > note(" ""Generated using Stata Software.", size(*0.75)) legorder(lohi) ///
-> legend(label(2 "Covered")) legend(label(1 " Not Covered")) 
+> legend(label(2 "Covered")) legend(label(3 "Not Covered")) 
 {res}{txt}
 {com}.     
 . /* STEP 4: EXPORT MAP */
@@ -140,7 +140,7 @@
       {txt}name:  {res}<unnamed>
        {txt}log:  {res}/Users/javierparada/Documents/Github/Prindex/PrindexAnalysis.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res}23 Sep 2020, 19:49:05
+ {txt}closed on:  {res}24 Sep 2020, 17:05:25
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}
