@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/javierparada/Documents/Github/Prindex/PrindexAnalysis.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}24 Sep 2020, 17:05:08
+ {txt}opened on:  {res}24 Sep 2020, 18:41:43
 {txt}
 {com}. //_1
 . display c(current_date)
@@ -98,7 +98,11 @@
 . *---------- TABLE 2
 . * tabstat rs_* [aw=prindex_wt], by(NAME_0)  labelwidth(20) format(%9.4g) save    
 . * same as
-. collapse (mean) rs_* [aw=prindex_wt],  by(NAME_0) 
+. qui replace mainprop_security=. if mainprop_security==2
+{txt}
+{com}. qui recode mainprop_security (1=0)(0=1)
+{txt}
+{com}. collapse (mean) rs_* mainprop_security [aw=prindex_wt],  by(NAME_0) 
 {txt}
 {com}. format rs_* %9.4g
 {txt}
@@ -133,14 +137,24 @@
 {txt}
 {com}. qui merge 1:1 NAME using "tables/table1.dta"
 {txt}
-{com}. qui{c -(}
+{com}.     
+. spmap mainprop_security using worldcoor.dta if NAME!="Antarctica", id(id) fcolor(BuYlRd) ///
+>     title("Land tenure insecuurity") ndfcolor(gs15)  clmethod(custom) clbreaks(0 .1 .20 .3 .40 .5 .60 .7 .80 .9 1) ///
+>     note("Generated using Stata Software.", size(*0.75)) legorder(hilo)  legtitle("Percentage Answer=Yes")
+{res}{txt}
+{com}.         
+. /* STEP 4: EXPORT MAP */
+. qui graph export "maps/map_insecurity.png", width(1000) replace
+{txt}
+{com}.         
+. qui{c -(}
 {txt}
 {com}. //_^
 . log close
       {txt}name:  {res}<unnamed>
        {txt}log:  {res}/Users/javierparada/Documents/Github/Prindex/PrindexAnalysis.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res}24 Sep 2020, 17:05:25
+ {txt}closed on:  {res}24 Sep 2020, 18:42:04
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}

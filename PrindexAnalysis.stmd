@@ -99,7 +99,9 @@ The answers to Reason 7 are missing for some countries. The answers to Reason 8 
 *---------- TABLE 2
 	* tabstat rs_* [aw=prindex_wt], by(NAME_0)  labelwidth(20) format(%9.4g) save	
 	* same as
-	collapse (mean) rs_* [aw=prindex_wt],  by(NAME_0) 
+	qui replace mainprop_security=. if mainprop_security==2
+	qui recode mainprop_security (1=0)(0=1)
+	collapse (mean) rs_* mainprop_security [aw=prindex_wt],  by(NAME_0) 
 	format rs_* %9.4g
 	gen NAME=NAME_0
 	qui save "tables/table1.dta", replace
@@ -123,6 +125,14 @@ The answers to Reason 7 are missing for some countries. The answers to Reason 8 
 	/* STEP 2: CREATE YOUR TRAVEL DATA */
 	use worlddata, clear
 	qui merge 1:1 NAME using "tables/table1.dta"
+	
+	spmap mainprop_security using worldcoor.dta if NAME!="Antarctica", id(id) fcolor(BuYlRd) ///
+		title("Land tenure insecuurity") ndfcolor(gs15)  clmethod(custom) clbreaks(0 .1 .20 .3 .40 .5 .60 .7 .80 .9 1) ///
+		note("Generated using Stata Software.", size(*0.75)) legorder(hilo)  legtitle("Percentage Answer=Yes")
+		
+	/* STEP 4: EXPORT MAP */
+	qui graph export "maps/map_insecurity.png", width(1000) replace
+		
 	qui{
 	forval i = 1/7 {
 		/* STEP 3: DRAW YOUR MAP */
@@ -136,19 +146,21 @@ The answers to Reason 7 are missing for some countries. The answers to Reason 8 
 	}
 ```
 
-![Map 2.1: Reason 1](maps/map_rs_1.png)
+![Map 2: Land Tenure Insecurity](maps/map_insecurity.png)
 
-![Map 2.2: Reason 2](maps/map_rs_2.png)
+![Map 3.1: Reason 1](maps/map_rs_1.png)
 
-![Map 2.3: Reason 3](maps/map_rs_3.png)
+![Map 3.2: Reason 2](maps/map_rs_3.png)
 
-![Map 2.4: Reason 4](maps/map_rs_4.png)
+![Map 3.3: Reason 3](maps/map_rs_3.png)
 
-![Map 2.5: Reason 5](maps/map_rs_5.png)
+![Map 3.4: Reason 4](maps/map_rs_4.png)
 
-![Map 2.6: Reason 6](maps/map_rs_6.png)
+![Map 3.5: Reason 5](maps/map_rs_5.png)
 
-![Map 2.7: Reason 7](maps/map_rs_7.png)
+![Map 3.6: Reason 6](maps/map_rs_6.png)
+
+![Map 3.7: Reason 7](maps/map_rs_7.png)
 
 Appendix
 --------------------------------------------------------
